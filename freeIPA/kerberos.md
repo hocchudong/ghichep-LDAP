@@ -21,3 +21,48 @@
 - khi bạn chạy command `kinit` bạn gọi một client mà kết nối tới Kerberos server, gọi là KDC. Kết quả cuả xác thực là client nhận một ticket. Ticket này là một pass tạm hoặc gọi là pass-book. Khi một user cố gắng truy cập vào một vài tài nguyên được bảo vệ bởi Kerberos tài nguyên đó yêu cầu tiket của user.
 
 - Khi project SSSD được sử dụng, ticket lấy tự động cho user khi người dùng xác thực trên máy client
+
+#####Data
+- MIT Kerberos KDC Server đọc tất cả thông tin định danh user và dịch vụ từ Directory Server. FreeIPA bổ sung ipa-kdb KDC data backend để đọc và ghi tất cả thông tin yêu cầu vào LDAP tree
+
+#####Các thuật ngữ
+
+- Authentication Server (AS): Một server có nhiệm vụ phát ticket cho một dịch vụ nào đó mà user muốn truy cập vào.
+
+- cipher text: dữ liệu bị mã hóa
+
+-  client:
+
+- credentials: Các thông tin của user
+
+- credential cache hay ticket  file: File bao gồm key để mã hóa các giao tiếp giữa user và network services.
+
+- crypt hash: Một cách hash thường sử dụng để xác thực user
+
+- GSS-API: The Generic Security Service API là tập các chức năng mà cung cấp các dịch vụ an toàn.
+
+- hash: hash value
+
+- hash function
+
+- key: được sử dụng khi mã hóa hoặc giải mã dữ liệu khác
+
+- Key Distribution Center (KDC):dịch vụ phát Kerberos tickets
+
+- keytab (keytable):
+
+- kinit: command cho phép admin login để có được và cache ticket-grant ticket ban đầu
+
+- principal (có thể hiểu là người đứng đầu): Là tên duy nhất của một user hay dịch vụ đã cho phép xác thực sử dụng Kerberos. form của principal root[/instance]@REALM
+
+- realm: Một mạng mà sử dụng Kerberos, tập hợp của một hay nhiều server gọi là KDCs.
+
+- service: Là chương trình được truy cập thông qua mạng
+
+- ticket: là tập các thông tin tạm để xác thực định danh của một client.
+
+- ticket-granting server (TGS): một server có nhiệm vuj phát ticket cho một dịch vụ mong muốn được đưa cho user để truy cập vào dịch vụ
+
+- ticket-granting ticket (TGT): là một ticket đặc biệt. Để cho phép client đạt được ticket bổ sung mà ko áp dụng cho họ từ KDC
+
+- unencrypted password
