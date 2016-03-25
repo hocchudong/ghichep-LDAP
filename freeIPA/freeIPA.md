@@ -77,6 +77,8 @@
 
 ####Client
 
+
+
 ###Cài đặt FreeIPA
 ####Chuẩn bị
 
