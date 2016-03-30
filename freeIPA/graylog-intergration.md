@@ -42,8 +42,26 @@
   - 2: Mẫu để tìm kiếm user. Sử dụng như ví dụ graylog gợi ý
   - 3: Tên user sẽ hiển thị. Ta sử dụng Common Name
 
+######Group Mapping
+
+- Cấu hình như bên dưới
+
+<img src="../images/groupMapping.png">
+
+
 ######Test login
 
 - Sau khi cấu hình 2 phần trên ta có thể kiểm tra việc login bằng một user trên FreeIPA. Nếu thành công ta có thể Lưu lại cấu hình LDAP. Nếu thất bại. Kiểm tra lại các cấu hình bên trên
 
 <img src="../images/loginTest.png">
+
+
+######Role Mapping Group
+
+- Sau khi cấu hình xong ldap cho user và group. Ta có thể mapping một group của LDAP tới một role trên Graylog
+
+- Vào **System -> Users -> LDAP Group Mapping**
+
+- Ở đây đã hiển thị các group trên LDAP ta chỉ việc chọn role cho group đó và nhấn save
+
+<img src="../images/groupMappingRoles.png">
