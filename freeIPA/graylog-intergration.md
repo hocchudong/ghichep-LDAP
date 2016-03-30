@@ -1,4 +1,4 @@
-#####Cấu hình xác thực graylog sử dụng FreeIPA
+###Cấu hình xác thực graylog sử dụng FreeIPA
 - Để cấu hình xác thực trên graylog sử dụng FreeIPA ta cần tạo một user `graylog` để thực hiện việc kết nối tới FreeIPA
 
 - Login vào Server chạy FreeIPA
