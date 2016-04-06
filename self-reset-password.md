@@ -66,7 +66,7 @@
 $ldap_url = "ldap://172.16.69.35:389";
 $ldap_starttls = false;
 $ldap_binddn = "uid=admin,cn=users,cn=accounts,dc=local,dc=domain";
-$ldap_bindpw = "PTCC@!2o015";
+$ldap_bindpw = "P4ssw0rD";
 $ldap_base = "cn=accounts,dc=local,dc=domain";
 $ldap_login_attribute = "uid";
 $ldap_fullname_attribute = "cn";
