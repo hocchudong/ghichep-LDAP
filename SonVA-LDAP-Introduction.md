@@ -113,7 +113,7 @@ LDAP hoạt động theo mô hình client-server. Một hoặc nhiều LDAP serv
 - Result (kết quả): server trả lại kết quả cho client
 - Unbind: client gửi yêu cầu đóng kết nối tới server
 - Close connection (đóng kết nối): đóng kết nối từ server  
-<img src="http://i.imgur.com/d4yQwZW.png">
+<img src="http://i.imgur.com/d4yQwZW.png">  
 ## 4.Database backend của LDAP
 Slapd là một “LDAP directory server” có thể chạy trên nhiều platform khác nhau. Bạn có thể sử dụng nó để cung cấp những dịch vụ của riêng mình. Những tính năng mà slapd cung cấp:  
 - LDAPv3: slapd hỗ trợ LDAP cả IPv4, IPv6 và Unix IPC.
@@ -185,9 +185,11 @@ Một entry là tập hợp của các thuộc tính, từng thuộc tính này 
 - Sau đó lần lượt là các thuộc tính của entry, thuộc tính dùng để lưu giữ dữ liệu. Mỗi thuộc tính trên một dòng theo định dạng là “kiểu thuộc tính : giá trị thuộc tính”.  
 
 Một số các thuộc tính cơ bản trong file Ldif:  
-|STT|	Tên|	Mô tả                             |  
-|1  |	dn |Distinguished Name, tên gọi phân biệt |  
-2	c	country – 2 kí tự viết tắt tên của một nước
+
+|STT|Tên|Mô tả                                 |  
+|1  |dn |Distinguished Name, tên gọi phân biệt |   
+|2	|c	|country – 2 kí tự viết tắt tên của một nước| 
+
 3	o	organization – tổ chức
 4	ou	organization unit – đơn vị tổ chức
 5	objectClass	Mỗi giá trị objectClass hoạt động như một khuôn mẫu cho các dữ liệu được lưu giữ trong một entry. Nó định nghĩa một bộ các thuộc tính phải được trình bày trong entry (Ví dụ: entry này có giá trị của thuộc tính objectClass là eperson, mà trong eperson có quy định cần có các thuộc tính là tên, email, uid ,…thì entry này sẽ có các thuộc tính đó)
