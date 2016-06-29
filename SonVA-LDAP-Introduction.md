@@ -114,15 +114,18 @@ LDAP hoạt động theo mô hình client-server. Một hoặc nhiều LDAP serv
 - Unbind: client gửi yêu cầu đóng kết nối tới server
 - Close connection (đóng kết nối): đóng kết nối từ server  
 <img src="http://i.imgur.com/d4yQwZW.png">  
+
 ## 4.Database backend của LDAP
 Slapd là một “LDAP directory server” có thể chạy trên nhiều platform khác nhau. Bạn có thể sử dụng nó để cung cấp những dịch vụ của riêng mình. Những tính năng mà slapd cung cấp:  
 - LDAPv3: slapd hỗ trợ LDAP cả IPv4, IPv6 và Unix IPC.
 - Simple Authentication and Security Layer: slapd hỗ trợ mạnh mẽ chứng thực và bảo mật dữ liệu dịch vụ bằng SASL
 - Transport Layer Security: slapd hỗ trợ sử dụng TLS hay SSL.
 2 database mà SLAPD sử dụng để lưu trữ dữ liệu hiện tại là bdb và hdb. BDB sử dụng Oracle Berkeley DB để lưu trữ dữ liệu. Nó được đề nghị sử dụng làm database backend chính cho SLAPD thông thường. HDB là cũng tương tự như BDB nhưng nó sử dụng database phân cấp nên hỗ trợ cơ sỡ dữ liệu dạng cây. HDB thường được mặc định cấu hình trong SLAPD hiện nay.
+
 ## 5. Lưu trữ thông tin của LDAP
 Ldif (LDAP Data Interchange Format) là một chuẩn định dang file text lưu trữ thông tin cấu hình LDAP và nội dung thư mục. File LDIF thường dùng để import dữ liệu mới vào trong directory hoặc thay đổi dữ liệu đã có. Dữ liệu trong file LDIF phải tuân theo quy luật có trong schema của LDAP.  
 Schema là loại dữ liệu được định nghĩa từ trước. Mọi thành phần được thêm vào hoặc thay đổi trong directory của bạn sẽ được kiểm tra lại trong schema để đảm bảo chính xác.
+
 ### 5.1 Cấu trúc tập tin LDIF  
 
 Thông thường file LDIF sẽ có mẫu sau:  
@@ -139,46 +142,27 @@ Ví dụ: thông tin của OU, people, các thư mục bên trong Distinguished 
 
 ----------------File LDIF lưu thông tin: ----------------------------------------------  
 dn: o=test
-
 objectclass: top
-
 objectclass: organization
-
 o: test.com
-
 dn: ou=People,o=test.com
-
 objectclass: organizationalUnit
-
 ou: People
-
 dn: ou=Server, o=test.com
-
 objectclass: organizationalUnit
-
 ou: Server
-
 dn: ou=IT, ou=People, o=test.com
-
 objectclass: organizationalUnit
-
 ou: IT
-
 dn: cn=sonva, ou=IT, ou=People, o=test.com
-
 objectclass: top
-
 objectclass: organizationalPerson
-
 cn: sonva
-
 sn: vu
-
 givenname: son
-
 uid: sonva
-
 ou: IT
+
 ### 5.2 Entry là gì?
 Một entry là tập hợp của các thuộc tính, từng thuộc tính này mô tả một nét đặt trưng tiêu biểu của một đối tượng. Một entry bao gồm nhiều dòng  
 - DN : distinguished name - là tên của entry thư mục, tất cả được viết trên một dòng.
@@ -186,22 +170,22 @@ Một entry là tập hợp của các thuộc tính, từng thuộc tính này 
 
 Một số các thuộc tính cơ bản trong file Ldif:  
 
-|STT|Tên|Mô tả                                 |  
+|STT|Tên|Mô tả                                 | 
+|---|---|---------------------------------------|
 |1  |dn |Distinguished Name, tên gọi phân biệt |   
 |2	|c	|country – 2 kí tự viết tắt tên của một nước| 
-
-3	o	organization – tổ chức
-4	ou	organization unit – đơn vị tổ chức
-5	objectClass	Mỗi giá trị objectClass hoạt động như một khuôn mẫu cho các dữ liệu được lưu giữ trong một entry. Nó định nghĩa một bộ các thuộc tính phải được trình bày trong entry (Ví dụ: entry này có giá trị của thuộc tính objectClass là eperson, mà trong eperson có quy định cần có các thuộc tính là tên, email, uid ,…thì entry này sẽ có các thuộc tính đó)
-6	givenName	Tên
-7	uid	id người dùng
-8	cn	common name – tên thường gọi
-9	telephoneNumber	số điện thoại
-10	sn	surname – họ
-11	userPassword	mật khẩu người dùng
-12	mail	địa chỉ email
-13	facsimileTelephoneNumber	số phách
-14	createTimestamp	thời gian tạo ra entry này
-15	creatorsName	tên người tạo ra entry này
-16	pwdChangedTime	thời gian thay đổi mật khẩu
-17	entryUUID	id của entry
+|3	|o	|organization – tổ chức|
+|4	|ou	|organization unit – đơn vị tổ chức|
+|5	|objectClass|	Mỗi giá trị objectClass hoạt động như một khuôn mẫu cho các dữ liệu được lưu giữ trong một entry. Nó định nghĩa một bộ các thuộc tính phải được trình bày trong entry (Ví dụ: entry này có giá trị của thuộc tính objectClass là eperson, mà trong eperson có quy định cần có các thuộc tính là tên, email, uid ,…thì entry này sẽ có các thuộc tính đó)|
+|6	|givenName|	Tên|
+|7	|uid	|id người dùng|
+|8	|cn	|common name – tên thường gọi|
+|9	|telephoneNumber	|số điện thoại|
+|10	|sn	|surname – họ|
+|11	|userPassword	|mật khẩu người dùng|
+|12	|mail	|địa chỉ email|
+|13	|facsimileTelephoneNumber	|số phách|
+|14	|createTimestamp	|thời gian tạo ra entry này|
+|15	|creatorsName	|tên người tạo ra entry này|
+|16	|pwdChangedTime	|thời gian thay đổi mật khẩu|
+|17	|entryUUID	|id của entry|
