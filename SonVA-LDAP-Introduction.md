@@ -2,9 +2,9 @@
 [I. GIỚI THIỆU VỀ LDAP](#I)  
 - [1. Dịch vụ thư mục (Dicrectory Service) là gì ?](#I.1)  
 - [2. LDAP là gì?](#I.2)  
-- [3. Phương thức hoạt động của LDAP](#1.3)  
-- [4.Database backend của LDAP](#1.4)  
-- [5. Lưu trữ thông tin của LDAP](#1.5)  
+- [3. Phương thức hoạt động của LDAP](#I.3)  
+- [4.Database backend của LDAP](#I.4)  
+- [5. Lưu trữ thông tin của LDAP](#I.5)  
 
 [II. Mô hình LDAP](#II)
 - [1. Mô hình thông tin Ldap (LDAP information model)](#II.1)
