@@ -58,6 +58,7 @@ mục LDAP của bạn. Thư mục đó có thể được sử dụng để lư
 Đợi chút, bạn đang sử dụng một Oracle, Sysbase, Informix, Microsoft SQL database để lưu trữ dữ liệu tương tự. LDAP khác biệt thế nào? điều gì làm nó tốt hơn? Mời đọc tiếp
 
 ### LDAP là gì?
+----
 
 Lightweight Directory Access Protocol, được biết như LDAP, dựa theo chuẩn X.500 nhưng đơn giản và dễ dàng tùy chỉnh hơn. Không như X.500, LDAP hỗ trợ TCP/IP để truy cập Internet
 
@@ -73,6 +74,7 @@ người sử dụng cần phải có một Username và mật khẩu khác nhau
 Làm cách nào để có thể tích hợp được người dùng giữa các hệ thống trên? Câu trả lời là LDAP. Vậy LDAP là gì?
 
 ## Định nghĩa về LDAP
+----
 
 LDAP (Lightweight Directory Access Protocol) - là giao thức truy cập nhanh các dịch vụ thư mục - là một chuẩn mở rộng cho các nghi thức truy cập thư mục.
 
@@ -85,6 +87,7 @@ LDAP được tạo ra cho các hành động đọc, bởi thế, xác thực n
 Có các LDAP Server như: OpenLDAP, OPENDS, Active Directory,...
 
 ### Giải thích Lightweight
+----
 
 Tại sao LDAP được coi là lightweight? Lightweight được so sánh với cái gì? Để trả lời câu hỏi này, bạn cần tìm hiểu nguồn gốc của LDAP.
 
@@ -101,6 +104,7 @@ là một lớp giao thức ứng dụng, nó chứa nhiều thứ hơn, ví d�
 Tóm lại, LDAP được coi là *lightweight* bởi vì nó đã lược bỏ rất nhiều những phương thức ít được sử dụng của X.500
 
 ### Giải thích  Directory
+----
 
 Không nên nhầm giữa dịch vụ thư mục với một cơ sở dữ liệu. Thư mục được thiết kế để đọc nhiều hơn là để ghi vào, còn đối với cơ sở dữ liệu, nó phù hợp với cả công việc đọc và ghi một 
 cách thường xuyên và lặp đi lặp lại.
@@ -109,6 +113,20 @@ LDAP chỉ là một giao thức, nó là một tập những thông tin cho vi�
 trưng khác như của cơ sở dữ liệu. 
 
 Client sẽ không bao giờ thấy được hoặc biết rằng có một bộ máy lưu trữ backend. Vì lý do này, LDAP client cần liên lạc với LDAP server theo mô hình chuẩn sau:
+
+![client-server](../images/tannt/client-server.png)
+
+### Access Protocol
+----
+
+LDAP là một giao thức truy cập. Nó đưa ra mô hình dạng cây dữ liệu, và mô hình dạng cây này được nhắc tới khi bạn truy cập một LDAP server.
+
+Giao thức truy cập client-server của LDAP được định nghĩa trong RFC, một client có thể đưa ra một loạt những yêu cầu và những trả lời cho những yêu cầu đó lại được trả lời 
+theo những cách sắp xếp khác nhau.
+
+## Phương thức hoạt động của LDAP
+
+
 
 # Tham khảo
 - [https://vi.wikipedia.org/wiki/Lightweight_Directory_Access_Protocol](https://vi.wikipedia.org/wiki/Lightweight_Directory_Access_Protocol)
