@@ -151,5 +151,57 @@ userPassword: A password for the user
 Thuộc tính `objectClass` có thể được sử dụng nhiều lần nếu bạn cần thuộc tính từ các objectClass khác, nhưng có những quy tắc chỉ ra những gì được phép. Các ObjectClass được định nghĩa 
 như là một trong vài "type"
 
+Có 2 loại objectClass chính là **structural** hay **auxiliary**. Một entry phải có đúng một tructural class, nhưng có thể không có hoặc có nhiều auxilliary class sử dụng để tăng các 
+thuộc tính có sẵn cho class. Một structural objectClass được sử dụng để tạo và định nghĩa entry, trong khi auxilliary objectClass thêm chức năng bổ sung thông qua các thuộc tính thêm vào.
+
+ObjectClass xác định các thuộc tính mà chúng cung cấp phải có (chỉ định bằng `MUST`) hay tùy chọn (chỉ định bằng `MAY`). Nhiều objectClass có thể cung cấp thuộc tính tương tự nhau và MAY hay 
+MUST của thuộc tính có thể khác đối với từng objectClass
+
+Ví dụ, objectClass "person" được khai báo như sau:
+```sh
+objectclass ( 2.5.6.6 NAME 'person' DESC 'RFC2256: a person' SUP top STRUCTURAL
+  MUST ( sn $ cn )
+  MAY ( userPassword $ telephoneNumber $ seeAlso $ description ) )
+```
+
+Đây là định nghĩa cho một structural objectClass, nghĩa là nó có thể được sử dụng để tạo entry. entry tạo phải được thiết lập thuộc tính `surname` và `commonname`, và có thể 
+tùy chọn thiết lập `userPassword, telephoneNumber, seeAlso, description`
+
+## Schemas
+----
+
+Định nghĩa objectClass và thuộc tính đã xong, tiếp theo, nhóm chúng lại với nhau trong một cấu trúc được gọi là **schema**. Không như cơ sở dữ liệu quan hệ truyền thống, schema trong 
+LDAP đơn giản là tổng hợp các objectClass và thuộc tính liên quan. Một DIT đơn có thể có nhiều schema khác nhau, vì vậy nó có thể tạo nhiều entry và nhiều thuộc tính nó cần.
+
+Schema thường gồm các định nghĩa thuộc tính bổ sung và có thể yêu cầu các thuộc tính được định nghĩa trong các schema khác. Ví dụ, objectClass "person" chúng ta thảo luận ở trên 
+yêu cầu thuộc tính `surname` hay `sn` được thiết lập cho mọi entry sử dụng objectClass "person". Nếu những điều này không được định nghĩa trong các máy chỉ LDAP, một schema chứa 
+các định nghĩa này có thể được sử dụng để thêm các định nghĩa này vào ngữ pháp server.
+
+Định dạng của một schema cơ bản là sự kết hợp của các entry trên:
+```sh
+. . .
+
+objectclass ( 2.5.6.6 NAME 'person' DESC 'RFC2256: a person' SUP top STRUCTURAL
+  MUST ( sn $ cn )
+  MAY ( userPassword $ telephoneNumber $ seeAlso $ description ) )
+
+attributetype ( 2.5.4.4 NAME ( 'sn' 'surname' )
+  DESC 'RFC2256: last (family) name(s) for which the entity is known by' SUP name )
+
+attributetype ( 2.5.4.4 NAME ( 'cn' 'commonName' )
+  DESC 'RFC4519: common name(s) for which the entity is known by' SUP name )
+
+. . .
+```
+
+# Data Organization
+----
+
+
+
+
+
 # Tham khảo
+----
+
 - [https://www.digitalocean.com/community/tutorials/understanding-the-ldap-protocol-data-hierarchy-and-entry-components](https://www.digitalocean.com/community/tutorials/understanding-the-ldap-protocol-data-hierarchy-and-entry-components)
