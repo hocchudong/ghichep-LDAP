@@ -126,7 +126,30 @@ nếu chúng chỉ thiết lập một giá trị cho mỗi entry.
 ## ObjectClass Definitions
 ----
 
+Các thuộc tính được tổng hợp bên trong các entry được gọi là các objectClass. Các objectClass đơn giản là nhóm các thuộc tính liên quan sử dụng để miêu ta một thứ cụ thể. Ví dụ, 
+"person" là một objectClass.
 
+Các entry tăng cường khả năng sử dụng các thuộc tính của objectClass bằng cách thiết lập một thuộc tính đặc biệt gọi là `objectClass`, đặt tên objectClass bạn muốn sử dụng. Trong thực 
+tế, `objectClass` là thuộc tính duy nhất bạn thiết lập trong một entry mà không chỉ định thêm objectClass khác.
+
+Vì vậy, nếu bạn tạo một entry mô tả người, bao gồm `objectClass person` cho phép bạn sử dụng tất cả các thuộc tính bên trong objectClass:
+```sh
+dn: . . .
+objectClass: person
+``` 
+
+Khi đó bạn có khả năng thiết lập các thuộc tính bên trong entry:
+```sh
+cn: Common name
+description: Human-readable description of the entry
+seeAlso: Reference to related entries
+sn: Surname
+telephoneNumber: A telephone number
+userPassword: A password for the user
+```
+
+Thuộc tính `objectClass` có thể được sử dụng nhiều lần nếu bạn cần thuộc tính từ các objectClass khác, nhưng có những quy tắc chỉ ra những gì được phép. Các ObjectClass được định nghĩa 
+như là một trong vài "type"
 
 # Tham khảo
 - [https://www.digitalocean.com/community/tutorials/understanding-the-ldap-protocol-data-hierarchy-and-entry-components](https://www.digitalocean.com/community/tutorials/understanding-the-ldap-protocol-data-hierarchy-and-entry-components)
