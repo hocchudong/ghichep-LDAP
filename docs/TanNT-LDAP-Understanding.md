@@ -224,9 +224,73 @@ hoặc nhóm thuộc tính này được gọi là relative distinguished name h
 cho entry trong câu hỏi. Chúng ta gọi chuỗi RDN này là distinguished name or DN của entry. Bạn phải đặc tả DN cho một entry trong suốt quá trình khởi tạo để hệ thống LDAP biết được 
 nơi sẽ đặt entry mới và đảm bảo rằng RDN của entry chưa được sử dụng bởi một entry đã có khác.
 
+Bạn có thể liên tưởng một RDN như một tập tin hoặc thư mục tương đối như bạn nhìn trong hệ thống tập tin. Với DN, tương tự với một đường dẫn tuyệt đối. Một khác biệt quan trọng là các 
+DN của LDAP chứa giá trị cụ thể ở bên tay trái, trong khi đường dẫn tập tin chứa thông tin cụ thể ở bên tay phải. Các DN tách biệt các giá trị RDN bằng dấu phẩy.
 
+Ví dụ, một entry cho person tên là John Smith, có thể được đặt dưới một entry "People" cho organization ở `example.com`. Vì có thể có nhiều John Smith trong organization, một 
+user ID có thể là một lựa chọn tốt hợp cho RDN của entry. Entry có thể được đặc tả như sau:
+```sh
+dn: uid=jsmith1,ou=People,dc=example,dc=com
+objectClass: inetOrgPerson
+cn: John Smith
+sn: Smith
+uid: jsmith1
+```
 
+Chúng ta có thể sử dụng objectClass `inetOrgPerson` để truy cập vào thuộc tính `uid` trong ví dụ này.
 
+# LDAP Inheritance
+----
+
+Khi bạn đọc từ trên xuống tới đây, bạn sẽ thấy có nhiều cách dữ liệu trong hệ thống LDAP liên hệ tới một cái khác như: phân cấp, thừa kế, lồng nhau. LDAP ban đầu có vẻ như 
+không bình thường vì nó thiết kế theo mô hình hướng đối tượng, đó là lý do nó sử dụng class. Khi chúng ta thảo luận ở phần trên, có nói tới tính thừa kế, bây giờ sẽ bàn tới nó.
+
+## Thừa kế ObjectClass
+----
+
+Mỗi objectClass là một class mô tả các đặc tính của đối tượng.
+
+Tuy nhiên, không như tính kế thừa đơn, các object trong LDAP có thể được thừa kế từ nhiều class. Điều này hoàn toàn có thể, bởi vì quan điểm của LDAP về class chỉ đơn giản là tổng hợp 
+các thuộc tính MUST và MAY. Điều này cho phép nhiều class được chỉ định cho một entry ( mặc dù chỉ có một structural objectclass có thể và phải dc chỉ ra), kết quả là object có quyền
+truy cập vào tập các thuộc tính với MUST và MAY
+
+Trong định nghĩa này, một objectClass có thể định nghĩa như một objectClass cha để thừa kế các thuộc tính. Ở đây sử dụng SUP đi kèm objectClass để kế thừa. Ví dụ, objectClass 
+organizationalPerson bắt đầu như sau:
+```sh
+objectclass ( 2.5.6.7 NAME 'organizationalPerson' SUP person STRUCTURAL
+ . . .
+```
+
+objectClass theo sau `SUP` khai báo như một objectClass cha. Cha phải chia sẻ loại objectClass được định nghĩa (ví dụ Structural hay auxiliary). objectClass con tự động 
+kết thừa các thuộc tính và phương thức của cha.
+
+Khi gán một objectClass cho một entry, bạn chỉ cần chỉ định hậu duệ cụ thể trong chuỗi kế thừa để có thể truy cập vào tất cả các thuộc tính khi đi ngược lên. Trong phần trước, 
+chúng ta đã sử dụng cách này để khai báo `inetOrgPerson` như một objectClass duy nhất cho entry John Smith trong khi vẫn có thể truy cập vào các thuộc tính được định nghĩa trong 
+objectClass `person` và `organizationalPerson`. `inetOrgPerson` thừa kế như sau:
+```sh
+inetOrgPerson -> organizationalPerson -> person -> top
+```
+
+Hầu hết tất cả các cây objectClass thừa kế kết thúc với một objectClass cụ thể gọi là "top". Đây là một objectClass trừu tượng mà mục đích duy nhất là yêu cầu objectClass tự thiết lập. 
+Nó được sử dụng để chỉ ra đỉnh của chuỗi thừa kế
+
+## Thừa kế thuộc tính
+----
+
+Theo cách tương tự, các thuộc tính có thể liệt kê một thuộc tính cha trong suốt quá trình khai báo. Thuộc tính này khi đó sẽ kế thừa các đặc tính thiết lập cho thuộc tính cha.
+
+Điều này thường được sử dụng để tạo ra phiên bản cụ thể của một thuộc tính chung. Ví dụ, surname là một loại của name và có thể sử dụng tất cả các phương thức tương tự để so sánh và kiểm 
+tra giá trị. nó thừa kế các đặc tính chung của thuộc tính name. 
+
+# LDAP Protocol Variations
+----
+
+Chúng ta đã nói ở phần đầu, LDAP chỉ là giao thức định nghĩa giao diện truyền thông để làm việc với dịch vụ thư mục. 
+
+Có thể thấy một vài loại khác nhau của giao thức ldap:
+- ldap://	Đây là giao thức LDAP cơ bản cho phép truy cập cấu trúc của dịch vụ thư mục
+- ldaps://	Một loại khác chỉ dẫn LDAP dùng SSL/TLS
+- ldapi://	Chỉ dẫn LDAP sử dụng IPC
 
 # Tham khảo
 ----
