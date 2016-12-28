@@ -197,6 +197,33 @@ attributetype ( 2.5.4.4 NAME ( 'cn' 'commonName' )
 # Data Organization
 ----
 
+Chúng ta đã đề cập đến các yếu tố phổ biến được sử dụng để xây dựng các entry trong hệ thống LDAP và nói về cách cách khối xây dựng được quy định trong hệ thống. Tuy nhiên, chúng ta vẫn 
+chưa nói nhiều về cách thức thông tin chính nó được tổ chức và cấu trúc trong một LDAP DIT.
+
+## Placing Entries within the DIT
+----
+
+Một DIT chỉ đơn giản là hệ thống phân cấp mô tả về mối quan hệ của các entry hiện tại. Khi được khởi tạo, mỗi entry mới phải "móc vào" DIT hiện tại bằng cách đặt chính nó như là con 
+của một entry đã có. Điều này tạo nên một cây cấu trúc sử dụng để định nghĩa và gán các mối quan hệ.
+
+Phía trên cùng của DIT là loại rộng nhất, theo đó mỗi nút tiếp theo là hậu duệ của nó. Thông thường, entry gần nhất đơn giản là sử dụng như một nhãn ghi về tổ chức mà các DIT được sử dụng. 
+Những entry này có thể ở trong bất kỳ objectClass nào, nhưng thường chúng được xây dựng để sử dụng các thành phần domain(`dc=example,dc=com` cho thông tin LDAP quản lý liên quan 
+`example.com`), location (`l=new_york,c=us` cho tổ chức hay chi nhánh ở NY), hay chi nhánh tổ chức (`ou=marketing,o=Example_Co`)
+
+Các entry sử dụng cho việc tổ chức (giống như folder) thường dùng organizationalUnit objectClass, sử dụng nhãn thuộc tính đơn giản gọi là `ou=`. Những nhãn này thường được dùng cho 
+các nhãn chung ngay phía dưới entry đầu tiên trong DIT (như `ou=people, ou=groups, ou=inventory`). LDAP được tối ưu cho việc tìm kiếm thông tin theo chiều ngang hơn là chiều trên xuống 
+trong cây. Vì vậy, cách tốt nhất là giữ cho cây phân cấp DIT đừng nông quá, với cách tổ chức nhánh và phân khu thông qua các thuộc tính cụ thể.
+
+## Naming and Referencing Entries within the DIT
+----
+
+Chúng ta tham chiếu tới các entry bằng thuộc tính của chúng. Nghĩa là mỗi entry phải có thuộc tính hoặc nhóm các thuộc tính rõ ràng ở mức độ của nó trong cây phân cấp DIT. Các thuộc tính 
+hoặc nhóm thuộc tính này được gọi là relative distinguished name hay RDN của entry và hoạt động như tên tập tin.
+
+Để tham chiếu tới một entry rõ ràng, bạn phải sử dụng RDN của entry kết hợp với RDN của entry cha. Chuỗi RDN này sẽ dẫn ngược lên đỉnh của cây phân cấp DIT và cung cấp một đường dẫn rõ ràng 
+cho entry trong câu hỏi. Chúng ta gọi chuỗi RDN này là distinguished name or DN của entry. Bạn phải đặc tả DN cho một entry trong suốt quá trình khởi tạo để hệ thống LDAP biết được 
+nơi sẽ đặt entry mới và đảm bảo rằng RDN của entry chưa được sử dụng bởi một entry đã có khác.
+
 
 
 
