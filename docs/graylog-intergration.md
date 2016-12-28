@@ -23,7 +23,7 @@
 
 - Cấu hình như hình bên dưới
 
-<img src="images/configServer.png">
+<img src="../images/configServer.png">
 
   - 1: Tick chọn enable LDAP
   - 2: Chọn LDAP
@@ -36,7 +36,7 @@
 
 - Cấu hình như hình bên dưới
 
-<img src="images/userMapping.png">
+<img src="../images/userMapping.png">
 
   - 1: Base DN để giới hạn LDAP query tới LDAP Server
   - 2: Mẫu để tìm kiếm user. Sử dụng như ví dụ graylog gợi ý
@@ -46,14 +46,14 @@
 
 - Cấu hình như bên dưới
 
-<img src="images/groupMapping.png">
+<img src="../images/groupMapping.png">
 
 
 ######Test login
 
 - Sau khi cấu hình 2 phần trên ta có thể kiểm tra việc login bằng một user trên FreeIPA. Nếu thành công ta có thể Lưu lại cấu hình LDAP. Nếu thất bại. Kiểm tra lại các cấu hình bên trên
 
-<img src="images/loginTest.png">
+<img src="../images/loginTest.png">
 
 
 ######Role Mapping Group
@@ -64,4 +64,4 @@
 
 - Ở đây đã hiển thị các group trên LDAP ta chỉ việc chọn role cho group đó và nhấn save
 
-<img src="images/groupMappingRoles.png">
+<img src="../images/groupMappingRoles.png">

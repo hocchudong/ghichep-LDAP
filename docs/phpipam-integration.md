@@ -23,11 +23,11 @@
 
 - Chọn *Administration* -> *Authentication methods*
 
-<img src="images/authenMethods.png">
+<img src="../images/authenMethods.png">
 
 - Ở đây ta chọn *Create new LDAP authentication*
 
-<img src="images/ldapmethods.png">
+<img src="../images/ldapmethods.png">
 
   - Description: Đây là phần mô tả cho LDAP
   - LDAP servers: IP hoặc hostname của LDAP Server , ta có thể khai báo nhiều LDAP Server ngăn cách nhau bằng `;` (chấm phẩy)
@@ -44,11 +44,11 @@
 
 - Chọn *Administration* -> *Users*
 
-<img src="images/createUsers.png">
+<img src="../images/createUsers.png">
 
 - Nhấn Create user
 
-<img src="images/newUsers.png">
+<img src="../images/newUsers.png">
 
 - Ở đây ta cần chú ý vào 3 mục
 
