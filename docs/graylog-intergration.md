@@ -53,7 +53,7 @@
 
 - Sau khi cấu hình 2 phần trên ta có thể kiểm tra việc login bằng một user trên FreeIPA. Nếu thành công ta có thể Lưu lại cấu hình LDAP. Nếu thất bại. Kiểm tra lại các cấu hình bên trên
 
-<img src="images/loginTest.png">
+<img src="../images/loginTest.png">
 
 
 ######Role Mapping Group
@@ -64,4 +64,4 @@
 
 - Ở đây đã hiển thị các group trên LDAP ta chỉ việc chọn role cho group đó và nhấn save
 
-<img src="images/groupMappingRoles.png">
+<img src="../images/groupMappingRoles.png">

@@ -75,7 +75,7 @@ $ldap_filter = "(&(objectClass=person)($ldap_login_attribute={login}))";
 ```
 - Ta có thể truy cập vào IP Server chạy self-service-password để test thử việc change password
 
-<img src="images/password/changePassword.png">
+<img src="../images/password/changePassword.png">
 
 ####Cấu hình Reset Password bằng cách gửi token qua mail
 
@@ -158,11 +158,11 @@ pear install pear/Auth_SASL
 
 - Vào trang self-service-password chọn option `Email a password reset link`
 
-<img src="images/password/resetbyMail.png">
+<img src="../images/password/resetbyMail.png">
 
 - ta nhập username và email của User cần reset và nhấn Send. Nếu nhập đúng ta check mail và sẽ có mail tương tự như sau
 
-<img src="images/password/email.png">
+<img src="../images/password/email.png">
 
 - Nhấn vào link và tiến hành đổi Password
 
@@ -200,12 +200,12 @@ $sms_token_length = 6;
 
 - Ta nhập user và nhấn get User
 
-<img src="images/password/getUser.png">
+<img src="../images/password/getUser.png">
 
 - Nếu có user trong hệ thống sẽ hiển thị như sau. Nhấn send để lấy token
 
-<img src="images/password/sendSMS.png">
+<img src="../images/password/sendSMS.png">
 
 - Có được token ta có thể sử dụng để reset password
 
-<img src="images/password/token.jpg">
+<img src="../images/password/token.jpg">
