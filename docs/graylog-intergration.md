@@ -23,7 +23,7 @@
 
 - Cấu hình như hình bên dưới
 
-<img src="images/configServer.png">
+<img src="../images/configServer.png">
 
   - 1: Tick chọn enable LDAP
   - 2: Chọn LDAP
@@ -36,7 +36,7 @@
 
 - Cấu hình như hình bên dưới
 
-<img src="images/userMapping.png">
+<img src="../images/userMapping.png">
 
   - 1: Base DN để giới hạn LDAP query tới LDAP Server
   - 2: Mẫu để tìm kiếm user. Sử dụng như ví dụ graylog gợi ý
@@ -46,7 +46,7 @@
 
 - Cấu hình như bên dưới
 
-<img src="images/groupMapping.png">
+<img src="../images/groupMapping.png">
 
 
 ######Test login

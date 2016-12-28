@@ -7,7 +7,7 @@ lưu trữ thông tin về một tổ chức và các tài sản cũng như ngư
 Đối với nhiều người, LDAP có lẽ rất khó hiểu, vì nó dựa một thuật ngữ cụ thể, sử dụng một số từ viết tắt không phổ biến, và thường được thực thi như một phần trong tương tác của hệ 
 thống lớn.
 
-# What is a Directory Service?
+# Dịch vụ thư mục là gì?
 ----
 
 Một dịch vụ thư mục được sử dụng để lưu trữ, tổ chức và trình diễn dữ liệu theo định dạng key-value. Thư mục được tối ưu cho việc tra cứu, tìm kiếm, và đọc hơn là ghi, vì vậy chúng hoạt động 
@@ -17,7 +17,7 @@ Dữ liệu được lưu trữ trong dịch vụ thư mục thường được 
 dịch vụ thư mục là một sổ địa chỉ. Mỗi người được biểu diễn như một entry trong thư mục, với cặp key-value mô tả thông tin liên hệ, nơi kinh doanh,... Dịch vụ thư mục hữu ích trong nhiều 
 kịch bản mà bạn muốn mô tả thông tin truy nhập.
 
-# What is LDAP?
+# LDAP là gì?
 ----
 
 LDAP, or lightweight directory access protocol, là một giao thức truyền thông định nghĩa các phương thức mà một dịch vụ thư mục có thể được truy xuất. Nói rộng ra, LDAP định hình cách dữ 
@@ -26,7 +26,7 @@ thành phần khác nhau được sử dụng để tạo ra entry.
 
 LDAP là một giao thức mở, có sẵn nhiều ứng dụng khác nhau đang sử dụng. OpenLDAP project là một trong những biến thể mã nguồn mở tốt nhất hỗ trợ.
 
-# Basic LDAP Data Components
+# Thành phần LDAP cơ bản
 ----
 
 Chúng ta đã thảo luận về cách mà giao thức LDAP sử dụng để kết nối với một cơ sử dữ liệu thư mục phục vụ truy vấn, thêm và sửa thông tin. Tuy nhiên, định nghĩa đơn giản này trình bài chưa 
@@ -49,7 +49,7 @@ Khi tham chiếu tới thuộc tính và dữ liệu của nó (lúc chưa thi�
 mail=example.com
 ```
 
-## Entries
+## Entry
 ----
 
 Các thuộc tính khi đứng một mình thì không hữu ích. Để giúp chúng có nghĩa, chúng phải được gắn kết với nhau. Trong LDAP, bạn sử dụng thuộc tính trong một entry. Một entry về cơ bản 
