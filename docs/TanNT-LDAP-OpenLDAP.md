@@ -19,7 +19,7 @@ hay thậm chí là ứng dụng lưu trữ đối tượng mạng.
 - The Directory Infomation Tree
 
 Phần này bạn có thể tham khảo tại [đây](https://github.com/hocchudong/ghichep-LDAP/blob/master/docs/TanNT-LDAP-Understanding.md) để nắm được các khái niệm. 
-Tiếp theo tôi sẽ đi sâu vào ứng dụng LDAP
+Tiếp theo tôi sẽ đi sâu vào ứng dụng OpenLDAP
 
 # A Technical Overview of OpenLDAP
 ----
@@ -134,6 +134,10 @@ lệnh xóa một entry
 ```sh
 #  ldapdelete -D 'cn=admin,dc=test,dc=com' -w tan124 "uid=tannt,ou=people,dc=test,dc=com"
 ```
+
+# LDAP xác thực user Ubuntu
+
+Trong phần này, tôi sẽ thực hiện cài đặt và cấu hình OpenLDAP để tạo user cho người dùng trên các máy Ubuntu 
 
 # Tham khảo
 - [https://www.google.com.vn/url?sa=t&rct=j&q=&esrc=s&source=web&cd=2&cad=rja&uact=8&ved=0ahUKEwi_uYLi55jRAhUDG5QKHdZoBj4QFgggMAE&url=https%3A%2F%2Ftazlambert.files.wordpress.com%2F2008%2F05%2Fpacktpublishingmasteringopenldapaug20071847191029.pdf&usg=AFQjCNFh_nemlQgtx5FQINp_LbajJ3TtPQ&sig2=RhzCm_KbeMhXKDaNvAbeBw](https://www.google.com.vn/url?sa=t&rct=j&q=&esrc=s&source=web&cd=2&cad=rja&uact=8&ved=0ahUKEwi_uYLi55jRAhUDG5QKHdZoBj4QFgggMAE&url=https%3A%2F%2Ftazlambert.files.wordpress.com%2F2008%2F05%2Fpacktpublishingmasteringopenldapaug20071847191029.pdf&usg=AFQjCNFh_nemlQgtx5FQINp_LbajJ3TtPQ&sig2=RhzCm_KbeMhXKDaNvAbeBw)
