@@ -29,14 +29,24 @@ Config LDAPAdmin:
 - Mở tệp tin   
 ```sudo nano /etc/phpldapadmin/config.php```  
 - Sửa   
-```$servers->setValue('server','host','domain_name_or_IP_address');```  
-- Với domain_name_or_IP_address là domain name /IP của server ldap .   
+```sh
+$servers->setValue('server','host','domain_name_or_IP_address');
+```  
+
+- Với domain_name_or_IP_address là domain name /IP của server ldap. 
+  
 - Sửa dc thành dc tương ứng của cây thư mục trong ldap, ví dụ LDAP có domain name là sonva.abc.com thì domain component dc=sonva,dc=abc,dc=com   
-```$servers->setValue('server','base',array('dc=sonva,dc=abc,dc=com'));```
+```
+$servers->setValue('server','base',array('dc=sonva,dc=abc,dc=com'));
+```
 - Update DC value của tài khoản login 
-```$servers->setValue('login','bind_id','cn=admin,dc=sonva,dc=abc,dc=com');```  
+```
+$servers->setValue('login','bind_id','cn=admin,dc=sonva,dc=abc,dc=com');
+```  
 - Tìm dòng sau, bỏ chú thích đi, sửa false thành true  
-```$config->custom->appearance['hide_template_warning'] = true;```
+```
+$config->custom->appearance['hide_template_warning'] = true;
+```
 - Lưu lại và thoát
 
 Truy cập vào domainname-or-serverip/phpldapadmin, nhập password tương ứng với cn để truy cập vào dn   

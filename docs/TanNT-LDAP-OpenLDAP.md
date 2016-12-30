@@ -125,7 +125,14 @@ Giải thích một số tham số:
 
 lệnh tham khảo
 ```sh
-ldapsearch -H ldap://test.com -x -W -D 'cn=admin,dc=test,dc=com' -s base
+# ldapsearch -H ldap://test.com -x -W -D 'cn=admin,dc=test,dc=com' -s base
+
+# ldapsearch -x -w tan124 -H ldap://test.com -D 'cn=admin,dc=test,dc=com' -b 'ou=users,dc=test,dc=com' '(uid=unguyen)'
+```
+
+lệnh xóa một entry
+```sh
+#  ldapdelete -D 'cn=admin,dc=test,dc=com' -w tan124 "uid=tannt,ou=people,dc=test,dc=com"
 ```
 
 # Tham khảo
