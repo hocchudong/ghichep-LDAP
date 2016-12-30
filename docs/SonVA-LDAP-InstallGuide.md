@@ -54,6 +54,8 @@ Truy cập vào domainname-or-serverip/phpldapadmin, nhập password tương ứ
 Truy cập thành công. sau đó có thể tạo user và group
 <img src="http://i.imgur.com/v1J24d9.png">
 
-Trong trường hợp gặp lỗi Error trying to get a non-existent value (appearance, password_hash), mở tập tin  
-```nano /usr/share/phpldapadmin/lib/TemplateRender.php```  
+- Trong trường hợp gặp lỗi Error trying to get a non-existent value (appearance, password_hash), mở tập tin  
+```
+nano /usr/share/phpldapadmin/lib/TemplateRender.php
+```  
 dòng 2469 sửa password_hash thành password_hash_custom
