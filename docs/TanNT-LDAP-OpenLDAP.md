@@ -137,7 +137,243 @@ lệnh xóa một entry
 
 # LDAP xác thực user Ubuntu
 
-Trong phần này, tôi sẽ thực hiện cài đặt và cấu hình OpenLDAP để tạo user cho người dùng trên các máy Ubuntu 
+Trong phần này, tôi sẽ thực hiện cài đặt và cấu hình OpenLDAP để tạo user cho người dùng trên các máy Ubuntu
+
+## Cài đặt LDAP Server
+----
+- Thực hiện cài đặt openldap, trong quá trình cài đặt cần nhập password cho admin entry
+```sh
+# apt-get -y install slapd ldap-utils
+```
+
+- Kiểm tra kết quả cài đặt
+```sh
+# slapcat
+```
+	Câu lệnh trên sẽ show ra kết quả một cây thư mục mặc định.
+	
+- Thực hiện cài đặt gói cấu hình bằng lệnh
+```sh
+# apt-get install libnss-ldap
+```
+
+	Trong quá trình cài đặt gói trên, sẽ yêu cầu thiết lập cấu hình, thực hiện điều chỉnh như sau:
+	```sh
+	ldap://vnptdata.vn
+	dc=vnptdata,dc=vn
+	ldapversion: 3
+	Make local root Database admin: No
+	Does the LDAP database require login? No
+	Local crypt to use when changing passwords: md5
+	```
+
+- Có thể thực hiện tùy chỉnh lại cấu hình bằng lệnh
+```sh
+# dpkg-reconfigure ldap-auth-config
+```
+
+- Để thay đổi các cài đặt của LDAP, sử dụng lệnh
+```sh
+dpkg-reconfigure slapd
+```
+
+	- Khi chạy lệnh trên sẽ cho phép bạn tùy chỉnh lại cài đặt trên cây thư mục, bạn chọn như sau
+	```sh
+	Omit OpenLDAP server configuration? No
+	DNS domain name? f you have an actual domain name on this server, you can use that. In this article, we will call it test.com
+	Organization name? this is up to you. We will use example in this guide. 
+	Administrator password? Use the password you configured during installation
+	Database backend to use? HDB
+	Remove the database when slapd is purged? No
+	Move old database? Yes
+	Allow LDAPv2 protocol? No
+	```
+	
+- Tạo một nhánh của cây thư mục `vi base.ldif` với nội dung sau:
+```sh
+dn: ou=people,dc=vnptdata,dc=vn
+objectClass: organizationalUnit
+ou: people
+
+dn: ou=groups,dc=vnptdata,dc=vn
+objectClass: organizationalUnit
+ou: groups
+```
+
+- Thực hiện add nhánh vào cây thư mục, nhập pass sau khi chạy lệnh
+```sh
+# ldapadd -x -D cn=admin,dc=vnptdata,dc=vn -W -f base.ldif
+```
+
+- Thêm một user vào OpenLDAP, đầu tiên thực hiện sinh ra một password dạng mã hóa bằng lệnh. Tôi nhập vào pass là 123456
+```sh
+# slappasswd
+New password: 
+Re-enter new password: 
+{SSHA}vcLSDERW1e0hjroVnjj/4atYlSyLeNun
+```
+
+- Tạo ra một tập tin `vi ldapuser.ldif` để thêm thông tin vào cây thư mục với nội dung sau:
+```sh
+dn: uid=ubuntu,ou=people,dc=vnptdata,dc=vn
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: shadowAccount
+cn: ubuntu
+sn: ubuntu
+userPassword: {SSHA}vcLSDERW1e0hjroVnjj/4atYlSyLeNun
+loginShell: /bin/bash
+uidNumber: 1000
+gidNumber: 1000
+homeDirectory: /home/ubuntu
+
+dn: cn=ubuntu,ou=groups,dc=vnptdata,dc=vn
+objectClass: posixGroup
+cn: ubuntu
+gidNumber: 1000
+memberUid: ubuntu
+```
+
+- Thực hiện thêm thông tin từ tập tin trên vào cây thư mục, nhập password sau khi chạy lệnh.
+```sh
+# ldapadd -x -D cn=admin,dc=vnptdata,dc=vn -W -f ldapuser.ldif
+```
+
+- Thêm user và group từ local vào cây thư mục LDAP, đầu tiên tạo script để tách thông tin. `vi ldapuser.sh`
+```sh
+#!/bin/bash
+
+SUFFIX='dc=vnptdata,dc=vn'
+LDIF='ldapuser.ldif'
+
+echo -n > $LDIF
+GROUP_IDS=()
+grep "x:[1-9][0-9][0-9][0-9]:" /etc/passwd | (while read TARGET_USER
+do
+    USER_ID="$(echo "$TARGET_USER" | cut -d':' -f1)"
+
+    USER_NAME="$(echo "$TARGET_USER" | cut -d':' -f5 | cut -d' ' -f1,2)"
+    [ ! "$USER_NAME" ] && USER_NAME="$USER_ID"
+
+    LDAP_SN="$(echo "$USER_NAME" | cut -d' ' -f2)"
+
+    LASTCHANGE_FLAG="$(grep "${USER_ID}:" /etc/shadow | cut -d':' -f3)"
+    [ ! "$LASTCHANGE_FLAG" ] && LASTCHANGE_FLAG="0"
+
+    SHADOW_FLAG="$(grep "${USER_ID}:" /etc/shadow | cut -d':' -f9)"
+    [ ! "$SHADOW_FLAG" ] && SHADOW_FLAG="0"
+
+    GROUP_ID="$(echo "$TARGET_USER" | cut -d':' -f4)"
+    [ ! "$(echo "${GROUP_IDS[@]}" | grep "$GROUP_ID")" ] && GROUP_IDS=("${GROUP_IDS[@]}" "$GROUP_ID")
+
+    echo "dn: uid=$USER_ID,ou=People,$SUFFIX" >> $LDIF
+    echo "objectClass: inetOrgPerson" >> $LDIF
+    echo "objectClass: posixAccount" >> $LDIF
+    echo "objectClass: shadowAccount" >> $LDIF
+    echo "sn: $LDAP_SN" >> $LDIF
+    echo "givenName: $(echo "$USER_NAME" | awk '{print $1}')" >> $LDIF
+    echo "cn: $USER_NAME" >> $LDIF
+    echo "displayName: $USER_NAME" >> $LDIF
+    echo "uidNumber: $(echo "$TARGET_USER" | cut -d':' -f3)" >> $LDIF
+    echo "gidNumber: $(echo "$TARGET_USER" | cut -d':' -f4)" >> $LDIF
+    echo "userPassword: {crypt}$(grep "${USER_ID}:" /etc/shadow | cut -d':' -f2)" >> $LDIF
+    echo "gecos: $USER_NAME" >> $LDIF
+    echo "loginShell: $(echo "$TARGET_USER" | cut -d':' -f7)" >> $LDIF
+    echo "homeDirectory: $(echo "$TARGET_USER" | cut -d':' -f6)" >> $LDIF
+    echo "shadowExpire: $(passwd -S "$USER_ID" | awk '{print $7}')" >> $LDIF
+    echo "shadowFlag: $SHADOW_FLAG" >> $LDIF
+    echo "shadowWarning: $(passwd -S "$USER_ID" | awk '{print $6}')" >> $LDIF
+    echo "shadowMin: $(passwd -S "$USER_ID" | awk '{print $4}')" >> $LDIF
+    echo "shadowMax: $(passwd -S "$USER_ID" | awk '{print $5}')" >> $LDIF
+    echo "shadowLastChange: $LASTCHANGE_FLAG" >> $LDIF
+    echo >> $LDIF
+done
+
+for TARGET_GROUP_ID in "${GROUP_IDS[@]}"
+do
+    LDAP_CN="$(grep ":${TARGET_GROUP_ID}:" /etc/group | cut -d':' -f1)"
+
+    echo "dn: cn=$LDAP_CN,ou=Groups,$SUFFIX" >> $LDIF
+    echo "objectClass: posixGroup" >> $LDIF
+    echo "cn: $LDAP_CN" >> $LDIF
+    echo "gidNumber: $TARGET_GROUP_ID" >> $LDIF
+
+    for MEMBER_UID in $(grep ":${TARGET_GROUP_ID}:" /etc/passwd | cut -d':' -f1,3)
+    do
+        UID_NUM=$(echo "$MEMBER_UID" | cut -d':' -f2)
+        [ $UID_NUM -ge 1000 -a $UID_NUM -le 9999 ] && echo "memberUid: $(echo "$MEMBER_UID" | cut -d':' -f1)" >> $LDIF
+    done
+    echo >> $LDIF
+done
+)
+```
+
+- Thực hiện chạy script trên bằng lệnh `bash ldapuser.sh` sẽ tạo ra một tập tin `ldapuser.ldif` với thông tin là các user local của hệ điều hành. thêm vào cây thư mục LDAP bằng lệnh:
+```sh
+# ldapadd -x -D cn=admin,dc=vnptdata,dc=vn -W -f ldapuser.ldif
+```
+
+- Để xóa user và group trong nhánh cây thư mục LDAP vừa add, thực hiện chạy lệnh `slapcat` để tìm đúng dn, sau đó chạy lệnh sau để xóa:
+```sh
+
+root@ubuntu:~# ldapdelete -x -W -D 'cn=admin,dc=vnptdata,dc=vn' "uid=ubuntu,ou=people,dc=vnptdata,dc=vn" 
+Enter LDAP Password:
+root@ubuntu:~# ldapdelete -x -W -D 'cn=admin,dc=vnptdata,dc=vn' "cn=ubuntu,ou=groups,dc=vnptdata,dc=vn" 
+Enter LDAP Password:
+```
+
+## Cài đặt LDAP client
+----
+- Thực hiện cài đặt các gói cần thiết bằng lệnh sau:
+```sh
+# apt-get -y install libnss-ldap libpam-ldap ldap-utils
+```
+
+	Trong quá cài đặt sẽ yêu cầu thiết lập cấu hình chỉ định LDAP serrver
+	```sh
+	ldap://example.vnptdata.vn/
+	dc=vnptdata,dc=vn
+	LDAP version: 3
+	Make local root Database admin: Yes
+	Does the LDAP database require login? No
+	LDAP account for root:	 cn=admin,dc=vnptdata,dc=vn
+	LDAP root account password:	
+	```
+	
+	Lưu ý đặt host cho file sau: `vi /etc/hosts` để client kết nối được tới LDAP server bằng domain name
+	```sh
+	172.16.69.250	example.vnptdata.vn
+	```
+	
+- Chỉnh sửa lại tập tin cấu hình login cho user login vào client. `vi /etc/nsswitch.conf`
+```sh
+passwd:     compat ldap
+group:     compat ldap
+shadow:     compat ldap
+```
+
+- Chỉnh sửa lại cấu hình của pam cho việc xác thực. `vi /etc/pam.d/common-password`
+```sh
+# line 26: change ( remove 'use_authtok' )
+password     [success=1 user_unknown=ignore default=die]     pam_ldap.so try_first_pass
+```
+
+- `vi /etc/pam.d/common-session`
+```sh
+# add to the end if need ( create home directory automatically at initial login )
+ session optional        pam_mkhomedir.so skel=/etc/skel umask=077
+```
+
+- Khởi động lại LDAP bằng lệnh:
+```sh
+# /etc/init.d/libnss-ldap restart
+```
+
+- Thực hiện login thử bằng user ubuntu mà ta vừa add bên LDAP server lúc trước với pass 123456, sẽ thấy login thành công và sinh ra một home directory /home/ubuntu mặc dù kiểm 
+tra trong file /etc/passwd không hề có user ubuntu này.
+
 
 # Tham khảo
 - [https://www.google.com.vn/url?sa=t&rct=j&q=&esrc=s&source=web&cd=2&cad=rja&uact=8&ved=0ahUKEwi_uYLi55jRAhUDG5QKHdZoBj4QFgggMAE&url=https%3A%2F%2Ftazlambert.files.wordpress.com%2F2008%2F05%2Fpacktpublishingmasteringopenldapaug20071847191029.pdf&usg=AFQjCNFh_nemlQgtx5FQINp_LbajJ3TtPQ&sig2=RhzCm_KbeMhXKDaNvAbeBw](https://www.google.com.vn/url?sa=t&rct=j&q=&esrc=s&source=web&cd=2&cad=rja&uact=8&ved=0ahUKEwi_uYLi55jRAhUDG5QKHdZoBj4QFgggMAE&url=https%3A%2F%2Ftazlambert.files.wordpress.com%2F2008%2F05%2Fpacktpublishingmasteringopenldapaug20071847191029.pdf&usg=AFQjCNFh_nemlQgtx5FQINp_LbajJ3TtPQ&sig2=RhzCm_KbeMhXKDaNvAbeBw)
+- [https://www.server-world.info/en/note?os=Ubuntu_14.04&p=ldap&f=1](https://www.server-world.info/en/note?os=Ubuntu_14.04&p=ldap&f=1)
+- [https://www.digitalocean.com/community/tutorials/how-to-authenticate-client-computers-using-ldap-on-an-ubuntu-12-04-vps](https://www.digitalocean.com/community/tutorials/how-to-authenticate-client-computers-using-ldap-on-an-ubuntu-12-04-vps)
