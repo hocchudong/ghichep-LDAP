@@ -157,15 +157,15 @@ Trong phần này, tôi sẽ thực hiện cài đặt và cấu hình OpenLDAP 
 # apt-get install libnss-ldap
 ```
 
-	Trong quá trình cài đặt gói trên, sẽ yêu cầu thiết lập cấu hình, thực hiện điều chỉnh như sau:
-	```sh
-	ldap://vnptdata.vn
-	dc=vnptdata,dc=vn
-	ldapversion: 3
-	Make local root Database admin: No
-	Does the LDAP database require login? No
-	Local crypt to use when changing passwords: md5
-	```
+Trong quá trình cài đặt gói trên, sẽ yêu cầu thiết lập cấu hình, thực hiện điều chỉnh như sau:
+```sh
+ldap://vnptdata.vn
+dc=vnptdata,dc=vn
+ldapversion: 3
+Make local root Database admin: No
+Does the LDAP database require login? No
+Local crypt to use when changing passwords: md5
+```
 
 - Có thể thực hiện tùy chỉnh lại cấu hình bằng lệnh
 ```sh
@@ -177,17 +177,17 @@ Trong phần này, tôi sẽ thực hiện cài đặt và cấu hình OpenLDAP 
 dpkg-reconfigure slapd
 ```
 
-	- Khi chạy lệnh trên sẽ cho phép bạn tùy chỉnh lại cài đặt trên cây thư mục, bạn chọn như sau
-	```sh
-	Omit OpenLDAP server configuration? No
-	DNS domain name? f you have an actual domain name on this server, you can use that. In this article, we will call it test.com
-	Organization name? this is up to you. We will use example in this guide. 
-	Administrator password? Use the password you configured during installation
-	Database backend to use? HDB
-	Remove the database when slapd is purged? No
-	Move old database? Yes
-	Allow LDAPv2 protocol? No
-	```
+- Khi chạy lệnh trên sẽ cho phép bạn tùy chỉnh lại cài đặt trên cây thư mục, bạn chọn như sau
+```sh
+Omit OpenLDAP server configuration? No
+DNS domain name? f you have an actual domain name on this server, you can use that. In this article, we will call it test.com
+Organization name? this is up to you. We will use example in this guide. 
+Administrator password? Use the password you configured during installation
+Database backend to use? HDB
+Remove the database when slapd is purged? No
+Move old database? Yes
+Allow LDAPv2 protocol? No
+```
 	
 - Tạo một nhánh của cây thư mục `vi base.ldif` với nội dung sau:
 ```sh
@@ -329,21 +329,21 @@ Enter LDAP Password:
 # apt-get -y install libnss-ldap libpam-ldap ldap-utils
 ```
 
-	Trong quá cài đặt sẽ yêu cầu thiết lập cấu hình chỉ định LDAP serrver
-	```sh
-	ldap://example.vnptdata.vn/
-	dc=vnptdata,dc=vn
-	LDAP version: 3
-	Make local root Database admin: Yes
-	Does the LDAP database require login? No
-	LDAP account for root:	 cn=admin,dc=vnptdata,dc=vn
-	LDAP root account password:	
-	```
+Trong quá cài đặt sẽ yêu cầu thiết lập cấu hình chỉ định LDAP serrver
+```sh
+ldap://example.vnptdata.vn/
+dc=vnptdata,dc=vn
+LDAP version: 3
+Make local root Database admin: Yes
+Does the LDAP database require login? No
+LDAP account for root:	 cn=admin,dc=vnptdata,dc=vn
+LDAP root account password:	
+```
 	
-	Lưu ý đặt host cho file sau: `vi /etc/hosts` để client kết nối được tới LDAP server bằng domain name
-	```sh
-	172.16.69.250	example.vnptdata.vn
-	```
+Lưu ý đặt host cho file sau: `vi /etc/hosts` để client kết nối được tới LDAP server bằng domain name
+```sh
+172.16.69.250	example.vnptdata.vn
+```
 	
 - Chỉnh sửa lại tập tin cấu hình login cho user login vào client. `vi /etc/nsswitch.conf`
 ```sh
