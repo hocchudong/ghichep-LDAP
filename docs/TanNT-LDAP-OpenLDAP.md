@@ -4,8 +4,7 @@ Trong phần này, tôi sẽ trình bày về OpenLDAP để giúp mọi ngườ
 
 OpenLDAP là một Open source cung cấp dịch vụ thư mục. Các thư mục có thể được sử dụng để lưu trữ thông tin tập trung, và các thông tin này sử dụng cho việc xác thực.
 Các máy trạm có thể kết nối tới OpenLDAP bằng cách sử dụng Lightweight Directory Access Protocol (LDAP). Máy trạm có thể tìm kiếm, chỉnh sửa hoặc lấy các bản ghi trong thư mục. 
-LDAP server thường được sử dụng làm dịch vụ xác thực người dùng. Nhưng ngoài ra còn có rất nhiều ứng dụng khác của LDAP, như sử dụng làm danh bạ địa chỉ, DNS database, công cụ tổ chức, 
-hay thậm chí là ứng dụng lưu trữ đối tượng mạng.
+LDAP server thường được sử dụng làm dịch vụ xác thực người dùng. Nhưng ngoài ra còn có rất nhiều ứng dụng khác của LDAP, như sử dụng làm danh bạ địa chỉ, DNS database, công cụ tổ chức, hay thậm chí là ứng dụng lưu trữ đối tượng mạng.
 
 # Các kiến thức cần nắm về LDAP
 ----
@@ -154,7 +153,7 @@ Trong phần này, tôi sẽ thực hiện cài đặt và cấu hình OpenLDAP 
 	
 - Thực hiện cài đặt gói cấu hình bằng lệnh
 ```sh
-# apt-get install libnss-ldap
+# apt-get install libnss-ldap -y
 ```
 
 Trong quá trình cài đặt gói trên, sẽ yêu cầu thiết lập cấu hình, thực hiện điều chỉnh như sau:
@@ -180,7 +179,7 @@ dpkg-reconfigure slapd
 - Khi chạy lệnh trên sẽ cho phép bạn tùy chỉnh lại cài đặt trên cây thư mục, bạn chọn như sau
 ```sh
 Omit OpenLDAP server configuration? No
-DNS domain name? f you have an actual domain name on this server, you can use that. In this article, we will call it test.com
+DNS domain name? f you have an actual domain name on this server, you can use that. In this article, we will call it example.vnptdata.vn
 Organization name? this is up to you. We will use example in this guide. 
 Administrator password? Use the password you configured during installation
 Database backend to use? HDB
