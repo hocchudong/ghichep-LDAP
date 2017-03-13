@@ -371,6 +371,14 @@ password     [success=1 user_unknown=ignore default=die]     pam_ldap.so try_fir
 - Thực hiện login thử bằng user ubuntu mà ta vừa add bên LDAP server lúc trước với pass 123456, sẽ thấy login thành công và sinh ra một home directory /home/ubuntu mặc dù kiểm 
 tra trong file /etc/passwd không hề có user ubuntu này.
 
+## Add TLS
+
+để nâng cao tính năng bảo mật ta cần thực hiện mã hóa đường truyền bằng TLS giữa client và server.
+
+Đầu tiên cần gen key. Tham khảo 03 link sau:
+https://mindref.blogspot.com/2010/12/openssl-ca.html
+https://mindref.blogspot.com/2010/12/openssl-create-certificates.html
+https://mindref.blogspot.com/2010/12/debian-openldap-ssl-tls-encryption.html
 
 # Tham khảo
 - [https://www.google.com.vn/url?sa=t&rct=j&q=&esrc=s&source=web&cd=2&cad=rja&uact=8&ved=0ahUKEwi_uYLi55jRAhUDG5QKHdZoBj4QFgggMAE&url=https%3A%2F%2Ftazlambert.files.wordpress.com%2F2008%2F05%2Fpacktpublishingmasteringopenldapaug20071847191029.pdf&usg=AFQjCNFh_nemlQgtx5FQINp_LbajJ3TtPQ&sig2=RhzCm_KbeMhXKDaNvAbeBw](https://www.google.com.vn/url?sa=t&rct=j&q=&esrc=s&source=web&cd=2&cad=rja&uact=8&ved=0ahUKEwi_uYLi55jRAhUDG5QKHdZoBj4QFgggMAE&url=https%3A%2F%2Ftazlambert.files.wordpress.com%2F2008%2F05%2Fpacktpublishingmasteringopenldapaug20071847191029.pdf&usg=AFQjCNFh_nemlQgtx5FQINp_LbajJ3TtPQ&sig2=RhzCm_KbeMhXKDaNvAbeBw)
