@@ -373,14 +373,214 @@ tra trong file /etc/passwd không hề có user ubuntu này.
 
 ## Add TLS
 
-để nâng cao tính năng bảo mật ta cần thực hiện mã hóa đường truyền bằng TLS giữa client và server.
+- Để nâng cao tính năng bảo mật ta cần thực hiện mã hóa đường truyền bằng TLS giữa client và server.
 
-Đầu tiên cần gen key. Tham khảo 03 link sau:
-https://mindref.blogspot.com/2010/12/openssl-ca.html
-https://mindref.blogspot.com/2010/12/openssl-create-certificates.html
-https://mindref.blogspot.com/2010/12/debian-openldap-ssl-tls-encryption.html
+Trong phần này, tôi sẽ cấu hình LDAP sử dụng tls để mã hóa đường truyền.
+
+Đầu tiên, trên LDAP server ta sử dụng openssl gen key cho việc mã hóa cũng như import vào LDAP tree
+
+- Nếu LDAP server chưa có openssl thì cài gói sau, nhưng hầu hết các distro đều cài mặc định openssl.
+```sh
+apt-get install openssl
+```
+
+- Ta thêm đường dẫn sau vào PATH của hệ điều hành, để có thể sử dụng script CA.sh gen key
+```sh
+export PATH=$PATH:/usr/lib/ssl/misc
+```
+
+- Tùy chỉnh lại các thông tin cấu hình trong file `/usr/lib/ssl/openssl.cnf` như sau
+```sh
+...
+[ req ]
+default_bits    = 2048
+...
+[ req_distinguished_name ]
+countryName_default		= VN
+stateOrProvinceName_default	= HaNoi
+0.organizationName_default	= VNPT DATA
+...
+```
+
+- Tạo thư mục để lưu các khóa
+```sh
+mkdir ~/ca && cd ~/ca
+```
+
+- Bây giờ ta tạo một file CA mới như sau:
+```
+ldap1:~/ca# CA.sh -newca
+CA certificate filename (or enter to create)
+
+Making CA certificate ...
+Generating a 2048 bit RSA private key
+............+++
+........+++
+writing new private key to './demoCA/private/./cakey.pem'
+Enter PEM pass phrase: **************
+Verifying - Enter PEM pass phrase: **************
+...
+Country Name (2 letter code) [UA]:VN
+State or Province Name (full name) [LV]:HN
+Locality Name (eg, city) []:HaNoi
+Organization Name (eg, company) [XYZ Co]:VNPT DATA
+Organizational Unit Name (eg, section) []:
+Common Name (eg, YOUR name) []:vnptdata.vn
+Email Address []:nguyentrongtan@vnpt.vn
+
+Please enter the following 'extra' attributes
+to be sent with your certificate request
+A challenge password []:123456
+An optional company name []:VNPT DATA
+Using configuration from /usr/lib/ssl/openssl.cnf
+Enter pass phrase for ./demoCA/private/./cakey.pem: *****
+Check that the request matches the signature
+Signature ok
+Certificate Details:
+...
+Write out database with 1 new entries
+Data Base Updated
+```
+
+- Kết quả của lệnh trên sẽ tạo ra một tập tin certificate tên là `cacert.pem` trong thư mục `~/ca/demoCA`. Ta gán lại quyền đọc cho thư mục gen key như sau:
+```sh
+chmod -R go-rwx ~/ca
+```
+
+- Sau khi tạo được tập tin certificate như trên, ta phải thực hiện tiếp 02 bước sau:
+	- create certificate request
+	- sign request by certificate authority. bước này sử dụng certificate `cacert.pem` vừa tạo được ở trên
+
+- Certificate Request
+```sh
+ldap1:~/ca# openssl req -new -nodes -keyout newreq.pem -out newreq.pem
+Generating a 2048 bit RSA private key
+.....................+++
+....................................+++
+writing new private key to 'newreq.pem'
+...
+Country Name (2 letter code) [UA]: VN
+State or Province Name (full name) [LV]:HN
+Locality Name (eg, city) []:HaNoi
+Organization Name (eg, company) [XYZ Co]:VNPT DATA
+Organizational Unit Name (eg, section) []:
+Common Name (eg, YOUR name) []:vnptdata.vn
+Email Address []:nguyentrongtan@vnpt
+
+Please enter the following 'extra' attributes
+to be sent with your certificate request
+A challenge password []:123456
+An optional company name []:VNPT DATA
+```
+
+- sign request
+```sh
+ldap1:~/ca# /usr/lib/ssl/misc/CA.sh -sign
+Using configuration from /usr/lib/ssl/openssl.cnf
+Enter pass phrase for ./demoCA/private/cakey.pem: 123456
+Check that the request matches the signature
+Signature ok
+Certificate Details:
+...       
+Certificate is to be certified until XXX (365 days)
+Sign the certificate? [y/n]:y
+
+1 out of 1 certificate requests certified, commit? [y/n]y
+Write out database with 1 new entries
+Data Base Updated
+Certificate:
+    ...
+Signed certificate is in newcert.pem
+```
+
+- Sau 02 bước trên, chúng ta đã tạo ra được 02 tập tin: `newreq.pem` và `newcert.pem`. Chúng ta có thể đổi tên thành ldap-key.pem và ldap-cert.pem để 
+sử dụng. hoặc có thể kết hợp 02 tập tin thành một như sau:
+```sh
+cat newreq.pem newcert.pem > new.pem
+```
+
+- Sau khi tạo xong key, bây giờ tới bước gắn key vào LDAP server và cấu hình CA cho client kết nối tới.
+
+- Trên LDAP server, chúng ta cài đặt CA certificate như sau:
+```sh
+cp ~/ca/demoCA/cacert.pem /etc/ssl/certs/
+chmod go+r /etc/ssl/certs/cacert.pem
+```
+
+- Copy ldap key and certificate files to /etc/ldap/ssl
+```sh
+mkdir /etc/ldap/ssl/
+cp ~/ca/new*.pem /etc/ldap/ssl/
+```
+
+- Secure certificates:
+```sh
+ldap1:~# chown -R root:openldap /etc/ldap/ssl
+ldap1:~# chmod -R o-rwx /etc/ldap/ssl
+```
+
+- Chỉnh sửa tập tin cấu hình `/etc/default/slapd` cho phép LDAP sử dụng kết nối bảo mật
+```sh
+LAPD_SERVICES="ldap://127.0.0.1:389/ ldaps:/// ldapi:///"
+```
+
+- Tạo một tập tin cấu hình cho LDAP `tls-config.ldif` nội dung sau:
+```sh
+dn: cn=config
+add: olcTLSCACertificateFile
+olcTLSCACertificateFile: /etc/ssl/certs/cacert.pem
+-
+add: olcTLSCertificateFile
+olcTLSCertificateFile: /etc/ldap/ssl/newcert.pem
+-
+add: olcTLSCertificateKeyFile
+olcTLSCertificateKeyFile: /etc/ldap/ssl/newreq.pem
+```
+
+- Apply it:
+```sh
+ldapmodify -QY EXTERNAL -H ldapi:/// -f tls-config.ldif
+```
+
+- Restart slapd:
+```sh
+/etc/init.d/slapd restart
+```
+
+- Ensure started:
+```sh
+netstat -tunlp | grep slapd
+tcp        0      0 0.0.0.0:636             0.0.0.0:*               LISTEN      2462/slapd      
+tcp        0      0 127.0.0.1:389           0.0.0.0:*               LISTEN      2462/slapd  
+```
+
+## Client
+
+Ta gửi file CA certificate `cacert.pem` từ Server sang client.
+
+- Sửa lại một vài tham số trong tập tin `/etc/ldap/ldap.conf` ở client
+```sh
+BASE    dc=dev,dc=local
+URI     ldaps://vnptdata.vn
+
+TLS_CACERT /etc/ssl/certs/cacert.pem
+TLS_REQCERT demand
+```
+
+- Kiểm tra lại xem đã làm việc chưa
+```sh
+ldapsearch -x
+```
+
+- Hoặc login lại và bắt gói tin trên LDAP server bằng `tcpdump`
+```sh
+tcpdump -ne -i any host 172.16.68.13
+```
 
 # Tham khảo
 - [https://www.google.com.vn/url?sa=t&rct=j&q=&esrc=s&source=web&cd=2&cad=rja&uact=8&ved=0ahUKEwi_uYLi55jRAhUDG5QKHdZoBj4QFgggMAE&url=https%3A%2F%2Ftazlambert.files.wordpress.com%2F2008%2F05%2Fpacktpublishingmasteringopenldapaug20071847191029.pdf&usg=AFQjCNFh_nemlQgtx5FQINp_LbajJ3TtPQ&sig2=RhzCm_KbeMhXKDaNvAbeBw](https://www.google.com.vn/url?sa=t&rct=j&q=&esrc=s&source=web&cd=2&cad=rja&uact=8&ved=0ahUKEwi_uYLi55jRAhUDG5QKHdZoBj4QFgggMAE&url=https%3A%2F%2Ftazlambert.files.wordpress.com%2F2008%2F05%2Fpacktpublishingmasteringopenldapaug20071847191029.pdf&usg=AFQjCNFh_nemlQgtx5FQINp_LbajJ3TtPQ&sig2=RhzCm_KbeMhXKDaNvAbeBw)
 - [https://www.server-world.info/en/note?os=Ubuntu_14.04&p=ldap&f=1](https://www.server-world.info/en/note?os=Ubuntu_14.04&p=ldap&f=1)
 - [https://www.digitalocean.com/community/tutorials/how-to-authenticate-client-computers-using-ldap-on-an-ubuntu-12-04-vps](https://www.digitalocean.com/community/tutorials/how-to-authenticate-client-computers-using-ldap-on-an-ubuntu-12-04-vps)
+- [https://mindref.blogspot.com/2010/12/openssl-ca.html](https://mindref.blogspot.com/2010/12/openssl-ca.html)
+- [https://mindref.blogspot.com/2010/12/openssl-create-certificates.html](https://mindref.blogspot.com/2010/12/openssl-create-certificates.html)
+- [https://mindref.blogspot.com/2010/12/debian-openldap-ssl-tls-encryption.html](https://mindref.blogspot.com/2010/12/debian-openldap-ssl-tls-encryption.html)
