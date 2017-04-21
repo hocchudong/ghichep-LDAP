@@ -166,7 +166,7 @@ Does the LDAP database require login? No
 Local crypt to use when changing passwords: md5
 ```
 
-- Có thể thực hiện tùy chỉnh lại cấu hình bằng lệnh
+- Có thể thực hiện tùy chỉnh lại cấu hình bằng lệnh hoặc sửa file `vi /etc/ldap.conf`
 ```sh
 # dpkg-reconfigure ldap-auth-config
 ```
@@ -421,10 +421,10 @@ Enter PEM pass phrase: **************
 Verifying - Enter PEM pass phrase: **************
 ...
 Country Name (2 letter code) [UA]:VN
-State or Province Name (full name) [LV]:HN
+State or Province Name (full name) [LV]:HaNoi
 Locality Name (eg, city) []:HaNoi
 Organization Name (eg, company) [XYZ Co]:VNPT DATA
-Organizational Unit Name (eg, section) []:
+Organizational Unit Name (eg, section) []: SI
 Common Name (eg, YOUR name) []:vnptdata.vn
 Email Address []:nguyentrongtan@vnpt.vn
 
@@ -558,13 +558,9 @@ tcp        0      0 127.0.0.1:389           0.0.0.0:*               LISTEN      
 
 Ta gửi file CA certificate `cacert.pem` từ Server sang client.
 
-- Sửa lại một vài tham số trong tập tin `/etc/ldap/ldap.conf` ở client
+- Sửa lại một vài tham số trong tập tin `/etc/ldap/ldap.conf` ở client, chỉ để lại dòng sau:
 ```sh
-BASE    dc=dev,dc=local
-URI     ldaps://vnptdata.vn
-
-TLS_CACERT /etc/ssl/certs/cacert.pem
-TLS_REQCERT demand
+TLS_REQCERT allow
 ```
 
 - Kiểm tra lại xem đã làm việc chưa
