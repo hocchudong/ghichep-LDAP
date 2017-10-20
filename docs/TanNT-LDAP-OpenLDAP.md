@@ -179,9 +179,9 @@ dpkg-reconfigure slapd
 - Khi chạy lệnh trên sẽ cho phép bạn tùy chỉnh lại cài đặt trên cây thư mục, bạn chọn như sau
 ```sh
 Omit OpenLDAP server configuration? No
-DNS domain name? f you have an actual domain name on this server, you can use that. In this article, we will call it example.vnptdata.vn
-Organization name? this is up to you. We will use example in this guide. 
-Administrator password? Use the password you configured during installation
+DNS domain name? vnptdata.vn
+Organization name? vnptdata
+Administrator password? 123456
 Database backend to use? HDB
 Remove the database when slapd is purged? No
 Move old database? Yes
