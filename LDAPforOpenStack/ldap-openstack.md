@@ -237,7 +237,7 @@ driver = sql
 - Ta thực hiện tạo một người dùng trong OpenStack để kiểm tra thông tin người dùng trong keystone được lưu trữ như nào. Thực hiện chạy các lệnh sau:
 ```sh
 openstack project create tannt_project --domain default --description "tannt test project"
-openstack user create tannt --email tannt@openstack.com --domain default --description "tannt openstack user account" --password tan@123++
+openstack user create tannt --email tannt@openstack.com --domain default --description "tannt openstack user account" --password xxxxx
 openstack role add Member --project tannt_project --project-domain default --user tannt --user-domain default
 ```
 
@@ -445,7 +445,7 @@ ldapadd -x -D cn=admin,dc=vnptdata,dc=vn -W -f newuser.ldif
 ```
 
 - Dưới đây là cấu hình LDAP tree mà tôi dựng cho hệ thống OpenStack sử dụng. 
-Password đăng nhập của user tannt là tan@123++
+Password đăng nhập của user tannt là xxxxx
 ```sh
 root@ldapserver:~# slapcat
 dn: dc=vnptdata,dc=vn
